@@ -60,7 +60,8 @@ object App {
   }
 
   def main(args: Array[String]): Unit = {
-    val game = randomGame(50)
+//    val game = randomGame(50)
+    val game = Seq(R,R,S,R,S,P,P,R,R,S,R,S,P,P,R,R,S)
 
     val windowSize = math.min(4, game.length)
 
@@ -94,7 +95,7 @@ object App {
     val dot = g.toDot(root, transformer)
     println(dot)
 
-    val res = predictNext(g, windowSize, 5, game).map {
+    val res = predictNext(g, windowSize, 3, game).map {
       case ((rps, probability), samples, historySize) => s"Going to play $rps (${probability * 100}%) with ${samples.toInt} samples and history size of ${historySize.toInt}"
     }.getOrElse("No prediction :/")
 
