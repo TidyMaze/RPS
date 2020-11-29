@@ -94,13 +94,13 @@ object App extends IOApp {
     case S => R
   }
 
-  def playTurn(state: GameState): IO[Unit] = {
-    val windowSize = math.min(4, state.game.length)
+  def playTurn(state: GameState, minSample: Int): IO[Unit] = {
+    val windowSize = state.game.length
 
     for {
       g <- buildGraph(state.game, windowSize)
 
-      predicted = predictNext(g, windowSize, 2, state.game)
+      predicted = predictNext(g, windowSize, minSample, state.game)
 
       picked <- predicted.map {
         case ((rps, probability), samples, historySize) =>
@@ -118,11 +118,11 @@ object App extends IOApp {
         println(s"You played $rps, I played $picked\t human: $updatedPlayerScore - ai: $updatedAiScore")
       }
 
-      res <- playTurn(state.copy(game = state.game :+ rps, playerScore = updatedPlayerScore, aiScore = updatedAiScore))
+      res <- playTurn(state.copy(game = state.game :+ rps, playerScore = updatedPlayerScore, aiScore = updatedAiScore), minSample)
     } yield res
   }
 
-  def run(args: List[String]): IO[ExitCode] = playTurn(GameState(Seq(), 0, 0)) *> IO.pure(ExitCode.Success)
+  def run(args: List[String]): IO[ExitCode] = playTurn(GameState(Seq(), 0, 0), 3) *> IO.pure(ExitCode.Success)
 
   private def buildGraph(game: Seq[RPS], windowSize: Int): IO[Graph[Node, WDiEdge]] = {
     val edges =
