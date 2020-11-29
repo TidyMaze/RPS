@@ -60,39 +60,31 @@ object App {
   }
 
   def main(args: Array[String]): Unit = {
-//    val game = randomGame(50)
-    val game = Seq(R,R,S,R,S,P,P,R,R,S,R,S,P,P,R,R,S)
+    //    val game = randomGame(50)
+    val game = Seq(R, R, S, R, S, P, P, R, R, S, R, S, P, P, R, R, S)
 
     val windowSize = math.min(4, game.length)
 
     println(game)
 
-    val slides = (1 to windowSize).flatMap { size =>
-      game.sliding(size).toSeq
-    }
+    val edges =
+      (1 to windowSize)
+        .flatMap(game.sliding(_).toSeq)
+        .map(ss => (ss.init, ss))
+        .groupBy(identity)
+        .map { case ((s, t), es) => WDiEdge(s, t)(es.length) }
+        .toList
 
-    println(slides)
-
-    val subseqs = slides.map(ss => (ss.init, ss))
-
-    println(subseqs)
-
-    val edgesGrouped = subseqs.groupBy(identity).map {
-      case ((s, t), es) => WDiEdge(s, t)(es.length)
-    }.toList
-
-    val g = Graph[Node, WDiEdge](edgesGrouped: _*)
-
-    println(g)
+    val g = Graph[Node, WDiEdge](edges: _*)
 
     val root = DotRootGraph(directed = true, Some("RPS"))
 
-    def transformer(innerEdge: Graph[Node, WDiEdge]#EdgeT) = innerEdge.edge match {
-      case WDiEdge(source, target, weight) =>
-        Some((root, DotEdgeStmt(showNode(source.toOuter), showNode(target.toOuter), Seq(DotAttr("penwidth", weight), DotAttr("label", weight)))))
-    }
-
-    val dot = g.toDot(root, transformer)
+    val dot = g.toDot(
+      root,
+      innerEdge => innerEdge.edge match {
+        case WDiEdge(source, target, weight) =>
+          Some((root, DotEdgeStmt(showNode(source.toOuter), showNode(target.toOuter), Seq(DotAttr("penwidth", weight), DotAttr("label", weight)))))
+      })
     println(dot)
 
     val res = predictNext(g, windowSize, 3, game).map {
