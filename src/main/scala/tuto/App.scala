@@ -77,7 +77,7 @@ object App extends IOApp {
 
   def askRPS(): IO[RPS] = for {
     _ <- IO {
-      println("What do you want to play? (R|P|S)")
+      print("Next? (R|P|S): ")
     }
     line <- IO {
       StdIn.readLine()
@@ -105,7 +105,7 @@ object App extends IOApp {
       picked <- predicted.map {
         case ((rps, probability), samples, historySize) =>
           IO {
-            println(s"$rps (${probability * 100}%) with ${samples.toInt} samples and history size of ${historySize.toInt}")
+            println(s"$rps\t(P=${probability * 100}%, S=${samples.toInt}, H=${historySize.toInt})")
           } *> IO.pure(beating(rps))
       }.getOrElse(randomRPS(random))
 
@@ -144,8 +144,10 @@ object App extends IOApp {
           Some((root, DotEdgeStmt(showNode(source.toOuter), showNode(target.toOuter), Seq(DotAttr("penwidth", weight), DotAttr("label", weight)))))
       })
 
-    for {
-      _ <- IO { println(dot) }
-    } yield g
+    //    for {
+    //      _ <- IO { println(dot) }
+    //    } yield g
+
+    IO.pure(g)
   }
 }
