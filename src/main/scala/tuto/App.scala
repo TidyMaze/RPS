@@ -27,6 +27,11 @@ object App {
 
   val random = new Random
 
+  def randomGame(size: Int) = (0 to size).map(_ =>
+    RPS.allRPS(random.nextInt(RPS.allRPS.length))
+  )
+
+
   def showNode(n: Node) = n match {
     case Nil => "Root"
     case other => other.mkString(",")
@@ -46,11 +51,18 @@ object App {
         allPredictions.maxByOption(_._2).map(best => (best, total))
       }
 
+  def predictNext(g: Graph[Node, WDiEdge], historySize: Int, minSample: Int, game: Seq[RPS]): Option[((RPS, Double), Double, Int)] = {
+    predict(g, game.takeRight(historySize)) match {
+      case Some((best, samples)) if samples >= minSample => Some((best, samples, historySize))
+      case None if historySize == 0 => None
+      case _ => predictNext(g, historySize - 1, minSample, game)
+    }
+  }
 
   def main(args: Array[String]): Unit = {
-    val game = Seq(R, P, R, S, P, P, R, S, R, P)
+    val game = randomGame(50)
 
-    val windowSize = game.length
+    val windowSize = math.min(4, game.length)
 
     println(game)
 
@@ -82,6 +94,10 @@ object App {
     val dot = g.toDot(root, transformer)
     println(dot)
 
-    println(predict(g, Seq(P, R, S)))
+    val res = predictNext(g, windowSize, 5, game).map {
+      case ((rps, probability), samples, historySize) => s"Going to play $rps (${probability * 100}%) with ${samples.toInt} samples and history size of ${historySize.toInt}"
+    }.getOrElse("No prediction :/")
+
+    println(res)
   }
 }
