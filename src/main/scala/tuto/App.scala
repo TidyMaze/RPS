@@ -1,5 +1,6 @@
 package tuto
 
+import cats.effect.{ExitCode, IO, IOApp}
 import scalax.collection.Graph
 import scalax.collection.GraphPredef._
 import scalax.collection.GraphEdge._
@@ -7,7 +8,9 @@ import scalax.collection.edge.Implicits._
 import scalax.collection.edge.WDiEdge
 import scalax.collection.io.dot._
 import implicits._
+import tuto.App.buildGraph
 
+import scala.io.StdIn
 import scala.util.Random
 
 sealed trait RPS extends Product with Serializable
@@ -22,14 +25,17 @@ object RPS {
   val allRPS = List(R, P, S)
 }
 
-object App {
+case class GameState(game: Seq[RPS], playerScore: Int, aiScore: Int)
+
+object App extends IOApp {
   type Node = Seq[RPS]
 
   val random = new Random
 
-  def randomGame(size: Int) = (0 to size).map(_ =>
-    RPS.allRPS(random.nextInt(RPS.allRPS.length))
-  )
+  def randomRPS(rand: Random): IO[RPS] =
+    IO {
+      rand.nextInt(RPS.allRPS.length)
+    }.map(RPS.allRPS(_))
 
 
   def showNode(n: Node) = n match {
@@ -54,19 +60,71 @@ object App {
   def predictNext(g: Graph[Node, WDiEdge], historySize: Int, minSample: Int, game: Seq[RPS]): Option[((RPS, Double), Double, Int)] = {
     predict(g, game.takeRight(historySize)) match {
       case Some((best, samples)) if samples >= minSample => Some((best, samples, historySize))
-      case None if historySize == 0 => None
-      case _ => predictNext(g, historySize - 1, minSample, game)
+      case _ if historySize > 0 => predictNext(g, historySize - 1, minSample, game)
+      case _ => None
     }
   }
 
-  def main(args: Array[String]): Unit = {
-    //    val game = randomGame(50)
-    val game = Seq(S,R,R,R,P,P,P,S,S,S,R,R,R,P,P,P,S,S,S,R,R)
+  def parseRPS(raw: String): Option[RPS] = raw match {
+    case "R" => Some(R)
+    case "P" => Some(P)
+    case "S" => Some(S)
+    case "r" => Some(R)
+    case "p" => Some(P)
+    case "s" => Some(S)
+    case _ => None
+  }
 
-    val windowSize = math.min(4, game.length)
+  def askRPS(): IO[RPS] = for {
+    _ <- IO {
+      println("What do you want to play? (R|P|S)")
+    }
+    line <- IO {
+      StdIn.readLine()
+    }
+    parsed <- parseRPS(line) match {
+      case Some(rps) => IO.pure(rps)
+      case None => askRPS()
+    }
+  } yield parsed
 
-    println(game)
+  def beating(rps: RPS): RPS = rps match {
+    case R => P
+    case P => S
+    case S => R
+  }
 
+  def playTurn(state: GameState): IO[Unit] = {
+    val windowSize = math.min(4, state.game.length)
+
+    for {
+      g <- buildGraph(state.game, windowSize)
+
+      predicted = predictNext(g, windowSize, 2, state.game)
+
+      picked <- predicted.map {
+        case ((rps, probability), samples, historySize) =>
+          IO {
+            println(s"$rps (${probability * 100}%) with ${samples.toInt} samples and history size of ${historySize.toInt}")
+          } *> IO.pure(beating(rps))
+      }.getOrElse(randomRPS(random))
+
+      rps <- askRPS()
+
+      updatedPlayerScore = state.playerScore + (if(rps == beating(picked)) 1 else 0)
+      updatedAiScore = state.aiScore + (if(picked == beating(rps)) 1 else 0)
+
+      _ <- IO {
+        println(s"You played $rps, I played $picked\t human: $updatedPlayerScore - ai: $updatedAiScore")
+      }
+
+      res <- playTurn(state.copy(game = state.game :+ rps, playerScore = updatedPlayerScore, aiScore = updatedAiScore))
+    } yield res
+  }
+
+  def run(args: List[String]): IO[ExitCode] = playTurn(GameState(Seq(), 0, 0)) *> IO.pure(ExitCode.Success)
+
+  private def buildGraph(game: Seq[RPS], windowSize: Int): IO[Graph[Node, WDiEdge]] = {
     val edges =
       (1 to windowSize)
         .flatMap(game.sliding(_).toSeq)
@@ -85,13 +143,9 @@ object App {
         case WDiEdge(source, target, weight) =>
           Some((root, DotEdgeStmt(showNode(source.toOuter), showNode(target.toOuter), Seq(DotAttr("penwidth", weight), DotAttr("label", weight)))))
       })
-    println(dot)
 
-    val res = predictNext(g, windowSize, 2, game).map {
-      case ((rps, probability), samples, historySize) =>
-        s"Going to play $rps (${probability * 100}%) with ${samples.toInt} samples and history size of ${historySize.toInt}"
-    }.getOrElse("No prediction :/")
-
-    println(res)
+    for {
+      _ <- IO { println(dot) }
+    } yield g
   }
 }
