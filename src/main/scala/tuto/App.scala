@@ -27,28 +27,25 @@ object App {
 
   val random = new Random
 
-  def subSequences[A](items: Seq[A]): Seq[Seq[A]] = items match {
-    case Seq(single) => Seq(Seq(single))
-    case Seq(fst, others@_*) => (fst +: others) +: subSequences(others)
-  }
-
   def showNode(n: Node) = n match {
     case Nil => "Root"
     case other => other.mkString(",")
   }
 
   def main(args: Array[String]): Unit = {
-    val game = Seq(R, R, S, S, S, P, R, R, P, R, S, S, S, P, R, P, P)
+    val game = Seq(R,P,R,S,P,P,R,S,R,P)
 
     val windowSize = 3
 
     println(game)
 
-    val slides = game.sliding(windowSize).toSeq
+    val slides = (1 to windowSize).flatMap { size =>
+      game.sliding(size).toSeq
+    }
 
     println(slides)
 
-    val subseqs = slides.flatMap(subSequences).map(ss => (ss.init, ss))
+    val subseqs = slides.map(ss => (ss.init, ss))
 
     println(subseqs)
 
