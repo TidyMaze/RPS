@@ -32,10 +32,25 @@ object App {
     case other => other.mkString(",")
   }
 
-  def main(args: Array[String]): Unit = {
-    val game = Seq(R,P,R,S,P,P,R,S,R,P)
+  def predict(g: Graph[Node, WDiEdge], history: Seq[RPS]) =
+    g.find(history)
+      .flatMap { node =>
+        val outEdges = node.edges.filter(e => e.from.toOuter == history)
+        val total = outEdges.toList.map(_.weight).sum
+        val allPredictions = outEdges.map(e => {
+          val target = e.target.toOuter.last
+          val weight = e.weight
+          target -> (weight / total)
+        }).toMap
 
-    val windowSize = 3
+        allPredictions.maxByOption(_._2).map(best => (best, total))
+      }
+
+
+  def main(args: Array[String]): Unit = {
+    val game = Seq(R, P, R, S, P, P, R, S, R, P)
+
+    val windowSize = game.length
 
     println(game)
 
@@ -66,5 +81,7 @@ object App {
 
     val dot = g.toDot(root, transformer)
     println(dot)
+
+    println(predict(g, Seq(P, R, S)))
   }
 }
