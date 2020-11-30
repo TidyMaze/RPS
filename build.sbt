@@ -1,3 +1,5 @@
+import sbt.Keys.mainClass
+
 name := "RPS"
 organization := "com.yaro"
 
@@ -8,13 +10,13 @@ lazy val engine = project.in(file("engine"))
       "org.scala-graph" %% "graph-core" % "1.13.2",
       "org.scala-graph" %% "graph-dot" % "1.13.0",
       "org.typelevel" %% "cats-effect" % "2.3.0"
-    )
+    ),
+    mainClass in(Compile, run) := Some("rps.App")
   )
 
 lazy val root = project.in(file("."))
   .enablePlugins(PlayScala)
   .settings(
-    mainClass in (Compile, run) := Some("rps.App"),
     scalaVersion := "2.13.4",
     name := "rps-app",
     libraryDependencies ++= Seq(guice, "org.scalatestplus.play" %% "scalatestplus-play" % "5.0.0" % Test)
