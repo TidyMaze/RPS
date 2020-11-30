@@ -1,4 +1,4 @@
-package tuto
+package rps
 
 import cats.effect.{ExitCode, IO, IOApp}
 import scalax.collection.Graph
@@ -8,7 +8,7 @@ import scalax.collection.edge.Implicits._
 import scalax.collection.edge.WDiEdge
 import scalax.collection.io.dot._
 import implicits._
-import tuto.App.buildGraph
+import rps.App.buildGraph
 
 import scala.io.StdIn
 import scala.util.Random
