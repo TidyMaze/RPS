@@ -54,7 +54,7 @@ object App extends IOApp {
     g.find(history)
       .flatMap { node =>
         val outEdges = node.edges.filter(e => e.from.toOuter == history)
-        val total = outEdges.toList.map(_.weight).sum
+        val total = outEdges.foldLeft(0.0)((acc, cur) => acc + cur.weight)
         val allPredictions = outEdges.map(e => {
           val target = e.target.toOuter.last
           val weight = e.weight
@@ -116,7 +116,7 @@ object App extends IOApp {
           } *> IO.pure(beating(rps))
       }.getOrElse(randomRPS(random))
 
-      rps <- askRPS()
+      rps <- randomRPS(random)
 
       updatedPlayerScore = state.playerScore + (if(rps == beating(picked)) 1 else 0)
       updatedAiScore = state.aiScore + (if(picked == beating(rps)) 1 else 0)
