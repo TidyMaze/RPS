@@ -10,6 +10,8 @@ import scalax.collection.io.dot._
 import implicits._
 import rps.App.buildGraph
 
+import cats.implicits._
+
 import scala.io.StdIn
 import scala.util.Random
 
@@ -36,6 +38,11 @@ object App extends IOApp {
     IO {
       rand.nextInt(RPS.allRPS.length)
     }.map(RPS.allRPS(_))
+
+  def randomGame(rand: Random, size: Int): IO[List[RPS]] =
+    (0 to size).toList.map { _ =>
+      randomRPS(rand)
+    }.sequence
 
 
   def showNode(n: Node) = n match {
@@ -118,7 +125,7 @@ object App extends IOApp {
         println(s"You played $rps, I played $picked\t human: $updatedPlayerScore - ai: $updatedAiScore")
       }
 
-      res <- playTurn(state.copy(game = state.game :+ rps, playerScore = updatedPlayerScore, aiScore = updatedAiScore), minSample)
+      res <- playTurn(state.copy(game = (state.game :+ rps).takeRight(50), playerScore = updatedPlayerScore, aiScore = updatedAiScore), minSample)
     } yield res
   }
 
@@ -127,22 +134,24 @@ object App extends IOApp {
   private def buildGraph(game: Seq[RPS], windowSize: Int): IO[Graph[Node, WDiEdge]] = {
     val edges =
       (1 to windowSize)
-        .flatMap(game.sliding(_).toSeq)
-        .map(ss => (ss.init, ss))
+        .view
+        .flatMap(game.sliding)
         .groupBy(identity)
-        .map { case ((s, t), es) => WDiEdge(s, t)(es.length) }
+        .map { case (s, es) => WDiEdge(s.init, s)(es.size) }
         .toList
+
+    println("edges " + edges.size)
 
     val g = Graph[Node, WDiEdge](edges: _*)
 
-    val root = DotRootGraph(directed = true, Some("RPS"))
+//    val root = DotRootGraph(directed = true, Some("RPS"))
 
-    val dot = g.toDot(
-      root,
-      innerEdge => innerEdge.edge match {
-        case WDiEdge(source, target, weight) =>
-          Some((root, DotEdgeStmt(showNode(source.toOuter), showNode(target.toOuter), Seq(DotAttr("penwidth", weight), DotAttr("label", weight)))))
-      })
+//    val dot = g.toDot(
+//      root,
+//      innerEdge => innerEdge.edge match {
+//        case WDiEdge(source, target, weight) =>
+//          Some((root, DotEdgeStmt(showNode(source.toOuter), showNode(target.toOuter), Seq(DotAttr("penwidth", weight), DotAttr("label", weight)))))
+//      })
 
     //    for {
     //      _ <- IO { println(dot) }
