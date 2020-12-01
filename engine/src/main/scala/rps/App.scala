@@ -116,7 +116,7 @@ object App extends IOApp {
           } *> IO.pure(beating(rps))
       }.getOrElse(randomRPS(random))
 
-      rps <- randomRPS(random)
+      rps <- askRPS()
 
       updatedPlayerScore = state.playerScore + (if(rps == beating(picked)) 1 else 0)
       updatedAiScore = state.aiScore + (if(picked == beating(rps)) 1 else 0)
@@ -136,8 +136,8 @@ object App extends IOApp {
       (1 to windowSize)
         .view
         .flatMap(game.sliding)
-        .groupBy(identity)
-        .map { case (s, es) => WDiEdge(s.init, s)(es.size) }
+        .groupMapReduce(identity)(_.size)(_ + _)
+        .map { case (s, size) => WDiEdge(s.init, s)(size) }
         .toList
 
     println("edges " + edges.size)
