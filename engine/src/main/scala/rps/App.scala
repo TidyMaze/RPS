@@ -104,29 +104,29 @@ object App extends IOApp {
   def playTurn(state: GameState, minSample: Int): IO[Unit] = {
     val windowSize = state.game.length
 
-    for {
+    (for {
+      //      rps <- randomRPS(random)
+
+      rps <- askRPS()
+
       g <- buildGraph(state.game, windowSize)
 
-      predicted = predictNext(g, windowSize, minSample, state.game)
-
-      picked <- predicted.map {
+      picked <- predictNext(g, windowSize, minSample, state.game).map {
         case ((rps, probability), samples, historySize) =>
           IO {
             println(s"$rps\t(P=${probability * 100}%, S=${samples.toInt}, H=${historySize.toInt})")
           } *> IO.pure(beating(rps))
       }.getOrElse(randomRPS(random))
 
-      rps <- askRPS()
-
-      updatedPlayerScore = state.playerScore + (if(rps == beating(picked)) 1 else 0)
-      updatedAiScore = state.aiScore + (if(picked == beating(rps)) 1 else 0)
+      updatedPlayerScore = state.playerScore + (if (rps == beating(picked)) 1 else 0)
+      updatedAiScore = state.aiScore + (if (picked == beating(rps)) 1 else 0)
 
       _ <- IO {
         println(s"You played $rps, I played $picked\t human: $updatedPlayerScore - ai: $updatedAiScore")
       }
-
-      res <- playTurn(state.copy(game = (state.game :+ rps).takeRight(50), playerScore = updatedPlayerScore, aiScore = updatedAiScore), minSample)
-    } yield res
+    } yield (updatedPlayerScore, updatedAiScore, rps)).flatMap {
+      case (updatedPlayerScore, updatedAiScore, rps) => playTurn(state.copy(game = (state.game :+ rps).takeRight(20), playerScore = updatedPlayerScore, aiScore = updatedAiScore), minSample)
+    }
   }
 
   def run(args: List[String]): IO[ExitCode] = playTurn(GameState(Seq(), 0, 0), 3) *> IO.pure(ExitCode.Success)
@@ -136,27 +136,26 @@ object App extends IOApp {
       (1 to windowSize)
         .view
         .flatMap(game.sliding)
-        .groupMapReduce(identity)(_.size)(_ + _)
+        .groupMapReduce(identity)(_ => 1)(_ + _)
         .map { case (s, size) => WDiEdge(s.init, s)(size) }
         .toList
 
-    println("edges " + edges.size)
-
     val g = Graph[Node, WDiEdge](edges: _*)
 
-//    val root = DotRootGraph(directed = true, Some("RPS"))
+    val root = DotRootGraph(directed = true, Some("RPS"))
 
-//    val dot = g.toDot(
-//      root,
-//      innerEdge => innerEdge.edge match {
-//        case WDiEdge(source, target, weight) =>
-//          Some((root, DotEdgeStmt(showNode(source.toOuter), showNode(target.toOuter), Seq(DotAttr("penwidth", weight), DotAttr("label", weight)))))
-//      })
+    val dot = g.toDot(
+      root,
+      innerEdge => innerEdge.edge match {
+        case WDiEdge(source, target, weight) =>
+          Some((root, DotEdgeStmt(showNode(source.toOuter), showNode(target.toOuter), Seq(DotAttr("penwidth", weight), DotAttr("label", weight)))))
+      })
 
-    //    for {
-    //      _ <- IO { println(dot) }
-    //    } yield g
-
-    IO.pure(g)
+    for {
+      _ <- IO {
+        println(dot)
+        println("edges " + edges.size)
+      }
+    } yield g
   }
 }
