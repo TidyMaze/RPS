@@ -1,0 +1,44 @@
+syntax = "proto3";
+
+package fr.yaro.rps;
+
+service RPSService {
+  rpc CreateNewGame (NewGameRequest) returns (NewGameResponse);
+  rpc PlayTurn (PlayTurnRequest) returns (PlayTurnResponse);
+}
+
+message NewGameRequest {}
+
+message NewGameResponse {
+  string gameId = 1;
+}
+
+enum RPS {
+  ROCK = 0;
+  PAPER = 1;
+  SCISSORS = 2;
+}
+
+message PlayTurnRequest {
+  string gameId = 1;
+  RPS rps = 2;
+}
+
+message GameState {
+  uint32 humanScore = 1;
+  uint32 aiScore = 2;
+}
+
+message PredictionsStats {
+  double predictedRock = 1;
+  double predictedPaper = 2;
+  double predictedScissors = 3;
+  string predictionTree = 4;
+}
+
+message PlayTurnResponse {
+  string gameId = 1;
+  GameState newState = 2;
+  PredictionsStats stats = 3;
+  RPS aiRps = 4;
+}

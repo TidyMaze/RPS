@@ -9,20 +9,51 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vue-material@1.0.0-beta-15/dist/theme/default.css">
 </head>
 <body>
-<h1>Welcome!</h1>
 <div id="app">
-    {{ message }}
-    <input v-model="message">
-<!--    <template>-->
-        <div class="md-layout">
-            <div class="md-layout-item">a</div>
-            <div class="md-layout-item">b</div>
-            <div class="md-layout-item">c</div>
+    <div class="md-display-1 main-title">Rock Paper Scissors!</div>
+
+    <div class="md-layout md-alignment-top-space-around scores-panel">
+        <div class="md-layout-item md-size-30">
+            <md-card>
+                <md-card-header>
+                    <div class="md-title">Human score</div>
+                </md-card-header>
+
+                <md-card-content class="score-counter">
+                    <span class="md-display-4 score-counter">{{ humanScore }}</span>
+                </md-card-content>
+            </md-card>
         </div>
-<!--    </template>-->
+        <div class="md-layout-item md-size-30">
+            <md-card>
+                <md-card-header>
+                    <div class="md-title">AI score</div>
+                </md-card-header>
+
+                <md-card-content class="score-counter">
+                    <span class="md-display-4">{{ aiScore }}</span>
+                </md-card-content>
+            </md-card>
+        </div>
+    </div>
+    <div class="md-layout md-gutter">
+        <div class="md-layout">
+            <div class="md-layout-item button-item">
+                <md-button class="md-raised md-primary" v-on:click="play('rock')">Rock</md-button>
+            </div>
+            <div class="md-layout-item button-item">
+                <md-button class="md-raised md-primary" v-on:click="play('paper')">Paper</md-button>
+            </div>
+            <div class="md-layout-item button-item">
+                <md-button class="md-raised md-primary" v-on:click="play('scissors')">Scissors</md-button>
+            </div>
+        </div>
+    </div>
 </div>
+
 <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/vue-material@1.0.0-beta-15/dist/vue-material.js"></script>
 <script src="/assets/javascripts/main.js" type="module"></script>
+
 </body>
 </html>

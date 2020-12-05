@@ -1,0 +1,19 @@
+#app {
+    margin: 50px;
+}
+
+.button-item {
+    text-align: center;
+}
+
+.scores-panel {
+    margin-bottom: 40px;
+}
+
+.score-counter {
+    text-align: center;
+}
+
+.main-title {
+    margin-bottom: 40px;
+}
