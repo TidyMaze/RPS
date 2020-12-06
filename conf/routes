@@ -4,7 +4,7 @@
 # ~~~~
 
 # An example controller showing a sample home page
-GET         /                    controllers.Assets.at(path="/public", file="html/main.html")
+GET         /                    controllers.Assets.at(path="/public", file="main.html")
 
 POST        /game                controllers.GameController.create
 
