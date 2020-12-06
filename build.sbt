@@ -15,11 +15,15 @@ lazy val engine = project.in(file("engine"))
   )
 
 lazy val root = project.in(file("."))
-  .enablePlugins(PlayScala)
+  .enablePlugins(PlayScala, AkkaGrpcPlugin)
   .settings(
     scalaVersion := "2.13.4",
     name := "rps-app",
-    libraryDependencies ++= Seq(guice, "org.scalatestplus.play" %% "scalatestplus-play" % "5.0.0" % Test)
+    libraryDependencies ++= Seq(guice,
+      "org.scalatestplus.play" %% "scalatestplus-play" % "5.0.0" % Test,
+      "ch.megard" %% "akka-http-cors" % "0.4.2"
+    ),
+    PB.protoSources in Compile += file("public/proto")
   )
   .aggregate(engine)
 
