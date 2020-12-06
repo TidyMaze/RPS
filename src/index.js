@@ -8,7 +8,7 @@ import 'vue-material/dist/theme/default.css'
 
 Vue.use(VueMaterial)
 
-// const client = new RPSServiceClient.RPSServiceClient('localhost:8080', null, null);
+const client = new RPSServiceClient('localhost:8080', null, null);
 
 new Vue({
   el: '#app',
@@ -20,12 +20,12 @@ new Vue({
   },
   methods: {
     play: function (player) {
-      // let request = new NewGameRequest();
-      // client.createNewGame(request, {}, (err, response) => {
-      //   if (!err) {
+      let request = new NewGameRequest();
+      client.createNewGame(request, {}, (err, response) => {
+        if (!err) {
           this.humanScore++;
-      //   }
-      // })
+        }
+      })
     }
   }
 })

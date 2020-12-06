@@ -10,6 +10,8 @@
 <div id="app">
     <div class="md-display-1 main-title">Rock Paper Scissors!</div>
 
+    <div>Game id: {{ gameId }}</div>
+
     <div class="md-layout md-alignment-top-space-around scores-panel">
         <div class="md-layout-item md-size-30">
             <md-card>
@@ -34,8 +36,8 @@
             </md-card>
         </div>
     </div>
-    <div class="md-layout md-gutter">
-        <div class="md-layout">
+    <md-card>
+        <div class="md-layout md-gutter">
             <div class="md-layout-item button-item">
                 <md-button class="md-raised md-primary" v-on:click="play('rock')">Rock</md-button>
             </div>
@@ -46,7 +48,7 @@
                 <md-button class="md-raised md-primary" v-on:click="play('scissors')">Scissors</md-button>
             </div>
         </div>
-    </div>
+    </md-card>
 </div>
 
 <script src="assets/main.js"></script>
