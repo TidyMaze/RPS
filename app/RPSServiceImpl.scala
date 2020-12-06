@@ -1,4 +1,4 @@
-import fr.yaro.rps.{GameState, NewGameRequest, NewGameResponse, PlayTurnRequest, PlayTurnResponse, PredictionsStats, RPSService}
+import fr.yaro.rps._
 
 import java.util.UUID
 import scala.concurrent.Future
