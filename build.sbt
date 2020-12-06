@@ -20,7 +20,7 @@ lazy val root = project.in(file("."))
     scalaVersion := "2.13.4",
     name := "rps-app",
     libraryDependencies ++= Seq(guice,
-      "org.scalatestplus.play" %% "scalatestplus-play" % "5.0.0" % Test,
+      "org.scalatestplus.play" %% "scalatestplus-play" % "4.0.3" % Test,
       "ch.megard" %% "akka-http-cors" % "0.4.2"
     ),
     PB.protoSources in Compile += file("public/proto")
