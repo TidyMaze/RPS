@@ -23,7 +23,7 @@ new Vue({
       // let request = new NewGameRequest();
       // client.createNewGame(request, {}, (err, response) => {
       //   if (!err) {
-      //     this.humanScore++;
+          this.humanScore++;
       //   }
       // })
     }
