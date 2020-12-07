@@ -25,6 +25,7 @@ lazy val root = project.in(file("."))
     ),
     PB.protoSources in Compile += file("public/proto")
   )
+  .dependsOn(engine)
   .aggregate(engine)
 
 // Adds additional packages into Twirl
