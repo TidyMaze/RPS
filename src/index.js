@@ -43,7 +43,7 @@ new Vue({
       request.setRps(actionToRPS(action))
       client.playTurn(request, {}, (err, response) => {
         if (!err) {
-          this.humanScore += response.getHumanscore()
+          this.humanScore += response.getNewstate().getHumanscore()
         }
       })
     }
