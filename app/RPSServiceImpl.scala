@@ -42,18 +42,19 @@ class RPSServiceImpl extends RPSService {
 
     val state = games.get(gameId)
 
-    val (picked, updatedPlayerScore, updatedAiScore) = RPSEngine.buildAndPredict(
-      state,
-      state.game.length,
-      3,
-      fromProto(in.rps)
-    ).unsafeRunSync()
+    val humanRps = fromProto(in.rps)
+    val windowSize = state.game.length
+    val prediction = RPSEngine.buildAndPredict(state, windowSize, 3, humanRps)
+    val (picked, updatedPlayerScore, updatedAiScore) = prediction.unsafeRunSync()
 
     val predictionsStats = PredictionsStats(0, 0, 0, "empty tree")
 
-    val resState = fr.yaro.rps.GameState(updatedPlayerScore, updatedAiScore)
+    val resStateProto = fr.yaro.rps.GameState(updatedPlayerScore, updatedAiScore)
+    val pickedProto = toProto(picked)
+    val response = PlayTurnResponse(in.gameId, Some(resStateProto), Some(predictionsStats), pickedProto)
 
-    val response = PlayTurnResponse(in.gameId, Some(resState), Some(predictionsStats), toProto(picked))
+    games.put(gameId, state.copy(game = state.game :+ humanRps, updatedPlayerScore, updatedAiScore))
+
     Future.successful(response)
   }
 }
