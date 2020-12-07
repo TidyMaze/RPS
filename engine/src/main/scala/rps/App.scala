@@ -39,10 +39,10 @@ object App extends IOApp {
       rand.nextInt(RPS.allRPS.length)
     }.map(RPS.allRPS(_))
 
-  def randomGame(rand: Random, size: Int): IO[List[RPS]] =
-    (0 to size).toList.map { _ =>
-      randomRPS(rand)
-    }.sequence
+//  def randomGame(rand: Random, size: Int): IO[List[RPS]] =
+//    (0 to size).toList.map { _ =>
+//      randomRPS(rand)
+//    }.sequence
 
 
   def showNode(n: Node) = n match {
