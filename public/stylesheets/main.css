@@ -17,3 +17,5 @@
 .main-title {
     margin-bottom: 40px;
 }
+
+[v-cloak] {display: none}
