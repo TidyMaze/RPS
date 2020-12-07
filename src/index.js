@@ -18,13 +18,22 @@ function actionToRPS(action) {
   }[action]
 }
 
+function rpsToAction(rps) {
+  return {
+    [RPS.ROCK]: 'rock',
+    [RPS.PAPER]: 'paper',
+    [RPS.SCISSORS]: 'scissors'
+  }[rps]
+}
+
 new Vue({
   el: '#app',
   data: {
     message: 'Hello Vue.js!',
     humanScore: 0,
     aiScore: 0,
-    gameId: null
+    gameId: null,
+    turnMessage: 'What do you want to play?'
   },
   mounted: function() {
     if(!this.gameId){
@@ -45,6 +54,7 @@ new Vue({
         if (!err) {
           this.humanScore = response.getNewstate().getHumanscore()
           this.aiScore = response.getNewstate().getAiscore()
+          this.turnMessage = `Human played ${action}, AI played ${rpsToAction(response.getAirps())}`
         }
       })
     }
