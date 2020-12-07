@@ -1,5 +1,5 @@
 const {RPSServiceClient} = require('./generated/public/proto/rps-service_grpc_web_pb.js')
-const {NewGameRequest} = require('./generated/public/proto/rps-service_pb.js')
+const {NewGameRequest, PlayTurnRequest, RPS} = require('./generated/public/proto/rps-service_pb.js')
 
 import Vue from 'vue/dist/vue.js'
 import VueMaterial from 'vue-material'
@@ -10,6 +10,14 @@ Vue.use(VueMaterial)
 
 const client = new RPSServiceClient('http://localhost:8080', null, null);
 
+function actionToRPS(action) {
+  return {
+    'rock': RPS.ROCK,
+    'paper': RPS.PAPER,
+    'scissors': RPS.SCISSORS
+  }[action]
+}
+
 new Vue({
   el: '#app',
   data: {
@@ -18,13 +26,24 @@ new Vue({
     aiScore: 0,
     gameId: null
   },
-  methods: {
-    play: function (player) {
-      let request = new NewGameRequest();
+  mounted: function() {
+    if(!this.gameId){
+      let request = new NewGameRequest()
       client.createNewGame(request, {}, (err, response) => {
         if (!err) {
-          this.humanScore++
           this.gameId = response.getGameid()
+        }
+      })
+    }
+  },
+  methods: {
+    play: function (action) {
+      let request = new PlayTurnRequest()
+      request.setGameid(this.gameId)
+      request.setRps(actionToRPS(action))
+      client.playTurn(request, {}, (err, response) => {
+        if (!err) {
+          this.humanScore += response.getHumanscore()
         }
       })
     }

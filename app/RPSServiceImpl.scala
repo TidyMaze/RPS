@@ -11,6 +11,7 @@ class RPSServiceImpl extends RPSService {
   }
 
   override def playTurn(in: PlayTurnRequest): Future[PlayTurnResponse] = {
+    println("Played " + in.rps)
     val gameState = GameState(10, 5)
     val predictionsStats = PredictionsStats(50, 40, 10, "empty tree")
     val response = PlayTurnResponse(in.gameId, Some(gameState), Some(predictionsStats))
