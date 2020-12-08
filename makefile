@@ -21,4 +21,4 @@ deploy:
 	cd target/docker/stage/ && gcloud app deploy
 
 #docker-run:
-#	docker run -e APPLICATION_SECRET=MySuperSecretKey -p 80:80 -p 8081:8081 rps:0.1.0-SNAPSHOT
+#	docker run -e APPLICATION_SECRET=MySuperSecretKey -p 8080:8080 -p 8081:8081 rps:0.1.0-SNAPSHOT
