@@ -1,6 +1,6 @@
 all: build-prod deploy
 
-build-prod: gen-client-grpc webpack-prod docker-stage docker-local-publish
+build-prod: gen-client-grpc webpack-prod docker-stage
 
 gen-client-grpc:
 	protoc ./public/proto/rps-service.proto \
@@ -13,8 +13,8 @@ webpack-prod:
 docker-stage:
 	sbt "docker:stage"
 
-docker-local-publish:
-	sbt "docker:publishLocal"
+#docker-local-publish:
+#	sbt "docker:publishLocal"
 
 deploy:
 	cp app.yaml target/docker/stage/
