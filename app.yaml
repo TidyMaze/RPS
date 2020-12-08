@@ -1,5 +1,9 @@
 runtime: custom
 env: flex
+liveness_check:
+  path: "/"
+readiness_check:
+  path: "/"
 network:
   forwarded_ports:
     - 8081
