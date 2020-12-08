@@ -23,7 +23,8 @@ lazy val root = project.in(file("."))
       "org.scalatestplus.play" %% "scalatestplus-play" % "4.0.3" % Test,
       "ch.megard" %% "akka-http-cors" % "0.4.2"
     ),
-    PB.protoSources in Compile += file("public/proto")
+    PB.protoSources in Compile += file("public/proto"),
+    dockerExposedPorts ++= Seq(9000, 8080)
   )
   .dependsOn(engine)
   .aggregate(engine)
@@ -33,3 +34,8 @@ lazy val root = project.in(file("."))
 
 // Adds additional packages into conf/routes
 // play.sbt.routes.RoutesKeys.routesImport += "com.yaro.binders._"
+
+javaOptions in Universal ++= Seq(
+  "-Dpidfile.path=/dev/null"
+)
+
