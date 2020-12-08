@@ -2,7 +2,6 @@ runtime: custom
 env: flex
 network:
   forwarded_ports:
-    - 8080
     - 8081
 env_variables:
   APPLICATION_SECRET: "MySuperSecretKey"
