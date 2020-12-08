@@ -14,6 +14,6 @@ class GrpcService @Inject () (rpsService: RPSService) (implicit actorSystem: Act
     .bindAndHandleAsync(
       grpcWebServiceHandlers,
       interface = "0.0.0.0",
-      port = 8080,
+      port = 8081,
       connectionContext = HttpConnectionContext())
 }

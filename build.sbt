@@ -24,7 +24,7 @@ lazy val root = project.in(file("."))
       "ch.megard" %% "akka-http-cors" % "0.4.2"
     ),
     PB.protoSources in Compile += file("public/proto"),
-    dockerExposedPorts ++= Seq(9000, 8080),
+    dockerExposedPorts ++= Seq(9000, 8081),
     daemonUser in Docker := "rps"
   )
   .dependsOn(engine)
