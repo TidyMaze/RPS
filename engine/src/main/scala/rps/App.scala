@@ -94,7 +94,7 @@ object App extends IOApp {
         println(s"You played $rps, I played $picked\t human: $updatedPlayerScore - ai: $updatedAiScore")
       }
     } yield (updatedPlayerScore, updatedAiScore, rps)).flatMap {
-      case (updatedPlayerScore, updatedAiScore, rps) => playTurn(state.copy(game = (state.game :+ rps).takeRight(20), playerScore = updatedPlayerScore, aiScore = updatedAiScore), minSample)
+      case (updatedPlayerScore, updatedAiScore, rps) => playTurn(state.copy(game = (state.game :+ rps).takeRight(30), playerScore = updatedPlayerScore, aiScore = updatedAiScore), minSample)
     }
   }
 
