@@ -4,8 +4,5 @@ liveness_check:
   path: "/"
 readiness_check:
   path: "/"
-network:
-  forwarded_ports:
-    - 8081
 env_variables:
   APPLICATION_SECRET: "MySuperSecretKey"

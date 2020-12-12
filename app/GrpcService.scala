@@ -46,7 +46,7 @@ class GrpcService @Inject()(rpsService: RPSService)(implicit actorSystem: ActorS
     .bindAndHandleAsync(
       Route.asyncHandler(routes),
       interface = "0.0.0.0",
-      port = 8081,
+      port = 8080,
       connectionContext = HttpConnectionContext())
     .map(binding => {
       println("Akka http server started")
