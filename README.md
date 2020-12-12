@@ -1,15 +1,20 @@
-# 🚀 Welcome to your new awesome project!
+# RPS
+*A brand new website to play (and lose) against all-mighty AI!*
 
-This project has been created using **webpack scaffold**, you can now run
+[You can find the link here](https://rock-paper-scissors-ai.ew.r.appspot.com/)
 
-```
-npm run build
-```
+## Run it by yourself 
 
-or
-
-```
-yarn build
+To build, publish docker images and run it locally:
+```shell
+make run-local
 ```
 
-to bundle your application
+## Techs
+
+This project uses many things:
+- Vue.js for frontent
+- Webpack as bundler + minifier
+- grpc-web as the exchange protocol between front and back (both generated [from protobuf](public/proto/rps-service.proto))
+- Scala with play (but actually using Akka HTTP for grpc-web ...) *// TODO: remove play*
+- docker to wrap it up
