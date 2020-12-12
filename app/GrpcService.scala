@@ -34,7 +34,7 @@ class GrpcService @Inject()(rpsService: RPSService)(implicit actorSystem: ActorS
       ctx => grpcWebServiceHandlers(ctx.request).map(RouteResult.Complete)
     },
     pathPrefix("assets") {
-      getFromDirectory("/public")
+      getFromDirectory("public")
     },
     request => {
       println("Not found request " + request.unmatchedPath)
