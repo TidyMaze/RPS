@@ -20,7 +20,7 @@ class GrpcService @Inject()(rpsService: RPSService)(implicit actorSystem: ActorS
 
   val routes: Route = concat(
     path("favicon.png") {
-      getFromFile("/public/images/favicon.png")
+      getFromFile("public/images/favicon.png")
     },
     path("hello") {
       get {
@@ -34,9 +34,7 @@ class GrpcService @Inject()(rpsService: RPSService)(implicit actorSystem: ActorS
       getFromFile("/public/index.html")
     },
     pathPrefix("fr.yaro.rps.RPSService") {
-      post {
-        ctx => grpcWebServiceHandlers(ctx.request).map(RouteResult.Complete)
-      }
+      ctx => grpcWebServiceHandlers(ctx.request).map(RouteResult.Complete)
     },
     pathPrefix("assets") {
       getFromDirectory("/public")
