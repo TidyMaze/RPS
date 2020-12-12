@@ -8,7 +8,10 @@ import 'vue-material/dist/theme/default.css'
 
 Vue.use(VueMaterial)
 
-const client = new RPSServiceClient('/', null, null);
+const protocol = window.location.protocol
+const host = window.location.host
+
+const client = new RPSServiceClient(`${protocol}//${host}`, null, null);
 
 function actionToRPS(action) {
   return {
