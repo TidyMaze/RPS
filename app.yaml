@@ -6,5 +6,5 @@ readiness_check:
   path: "/"
 env_variables:
   APPLICATION_SECRET: "MySuperSecretKey"
-basic_scaling:
-  max_instances: 1
+manual_scaling:
+  instances: 1
