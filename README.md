@@ -1,7 +1,7 @@
 # RPS
 *A brand new website to play (and lose) against all-mighty AI!*
 
-[You can find the link here](https://rock-paper-scissors-ai.ew.r.appspot.com/)
+You can find the link here: [https://tinyurl.com/try-rps](https://tinyurl.com/try-rps)
 
 ## Run it by yourself 
 
