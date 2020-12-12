@@ -28,10 +28,7 @@ class GrpcService @Inject()(rpsService: RPSService)(implicit actorSystem: ActorS
       }
     },
     pathEndOrSingleSlash {
-      complete("OK")
-    },
-    pathEndOrSingleSlash {
-      getFromFile("/public/index.html")
+      getFromFile("public/main.html")
     },
     pathPrefix("fr.yaro.rps.RPSService") {
       ctx => grpcWebServiceHandlers(ctx.request).map(RouteResult.Complete)
