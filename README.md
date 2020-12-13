@@ -13,7 +13,7 @@ make run-local
 ## Techs
 
 This project uses many things:
-- Vue.js for frontent
+- Vue.js for frontend
 - Webpack as bundler + minifier
 - grpc-web as the exchange protocol between front and back (both generated [from protobuf](public/proto/rps-service.proto))
 - Scala with play (but actually using Akka HTTP for grpc-web ...) *// TODO: remove play*
