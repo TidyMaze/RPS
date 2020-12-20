@@ -5,12 +5,11 @@ import rps.App.{Node, beating, predictNext, random, randomRPS, showNode}
 import scalax.collection.Graph
 import scalax.collection.edge.WDiEdge
 import scalax.collection.io.dot.{DotAttr, DotEdgeStmt, DotRootGraph}
-
 import cats.effect.{ExitCode, IO, IOApp}
 import scalax.collection.Graph
 import scalax.collection.GraphPredef._
 import scalax.collection.GraphEdge._
-import scalax.collection.edge.Implicits._
+import scalax.collection.edge.Implicits.{+, _}
 import scalax.collection.edge.WDiEdge
 import scalax.collection.io.dot._
 import implicits._
@@ -22,7 +21,7 @@ import scala.io.StdIn
 import scala.util.Random
 
 object RPSEngine {
-  def buildGraph(game: Seq[RPS], windowSize: Int): IO[Graph[Node, WDiEdge]] = {
+  def buildGraph(game: Seq[RPS], windowSize: Int): (Graph[Node, WDiEdge], String) = {
     val edges =
       (1 to windowSize)
         .view
@@ -42,27 +41,23 @@ object RPSEngine {
           Some((root, DotEdgeStmt(showNode(source.toOuter), showNode(target.toOuter), Seq(DotAttr("penwidth", weight), DotAttr("label", weight)))))
       })
 
-    for {
-      _ <- IO {
-        println(dot)
-        println("edges " + edges.size)
-      }
-    } yield g
+    (g, dot)
   }
 
-  def buildAndPredict(state: GameState, windowSize: Int, minSample: Int, rps: RPS): IO[(RPS, Int, Int)] = for {
-    g <- buildGraph(state.game, windowSize)
+  def buildAndPredict(state: GameState, windowSize: Int, minSample: Int, rps: RPS): IO[(RPS, Int, Int, String)] = {
+    val (g, dot) = buildGraph(state.game, windowSize)
 
-    picked <- predictNext(g, windowSize, minSample, state.game).map {
-      case ((rps, probability), samples, historySize) =>
-        IO {
-          println(s"$rps\t(P=${probability * 100}%, S=${samples.toInt}, H=${historySize.toInt})")
-        } *> IO.pure(beating(rps))
-    }.getOrElse(randomRPS(random))
+    for {
+      picked <- predictNext(g, windowSize, minSample, state.game).map {
+        case ((rps, probability), samples, historySize) =>
+          IO.pure(beating(rps))
+      }.getOrElse(randomRPS(random))
 
-    updatedPlayerScore = state.playerScore + (if (rps == beating(picked)) 1 else 0)
-    updatedAiScore = state.aiScore + (if (picked == beating(rps)) 1 else 0)
-  } yield (picked, updatedPlayerScore, updatedAiScore)
+      updatedPlayerScore = state.playerScore + (if (rps == beating(picked)) 1 else 0)
+      updatedAiScore = state.aiScore + (if (picked == beating(rps)) 1 else 0)
+
+    } yield (picked, updatedPlayerScore, updatedAiScore, dot)
+  }
 
 }
 

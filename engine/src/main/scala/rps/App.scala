@@ -88,7 +88,7 @@ object App extends IOApp {
       rps <- askRPS()
 
       resPredicted <- buildAndPredict(state, windowSize, minSample, rps)
-      (picked, updatedPlayerScore, updatedAiScore) = resPredicted
+      (picked, updatedPlayerScore, updatedAiScore, dot) = resPredicted
 
       _ <- IO {
         println(s"You played $rps, I played $picked\t human: $updatedPlayerScore - ai: $updatedAiScore")
