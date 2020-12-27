@@ -7,7 +7,7 @@ You can find the link here: [https://tinyurl.com/try-rps](https://tinyurl.com/tr
 
 To build, publish docker images and run it locally:
 ```shell
-make run-local
+make run-local-docker
 ```
 
 ## Techs

@@ -40,3 +40,13 @@ javaOptions in Universal ++= Seq(
   "-Dpidfile.path=/dev/null"
 )
 
+//watchTriggers ++= Seq(
+//  baseDirectory.value.toGlob / "public" / **,
+//  baseDirectory.value.toGlob / ** / "*.scala"
+//)
+//watchBeforeCommand := { () =>
+//  FileTreeView.default.list(baseDirectory.value.toGlob / "public" / **).foreach {
+//    case (p, _) => println(p)
+//  }
+//  println("watch before")
+//}
