@@ -32,6 +32,22 @@ function rpsToAction(rps) {
   }[rps]
 }
 
+function showGraph(dot){
+  // Create the input graph
+  var g = graphlibDot.read(dot)
+  var render = new dagreD3.render();
+  var svg = d3.select("svg"), svgGroup = svg.append("g");
+  render(d3.select("svg g"), g);
+  var graphWidth = g.graph().width
+  var graphHeight = g.graph().height
+  console.log(graphWidth)
+  if(graphWidth >= 0 && graphHeight >= 0) {
+    var xCenterOffset = (svg.attr("width") - graphWidth) / 2;
+    svgGroup.attr("transform", "translate(" + xCenterOffset + ", 20)");
+    svg.attr("height", g.graph().height + 40);
+  }
+}
+
 new Vue({
   el: '#app',
   data: {
@@ -50,26 +66,6 @@ new Vue({
         }
       })
     }
-
-    // Create the input graph
-    var g = graphlibDot.read(`
-    digraph G {
-      start -> a0;
-      start -> b0;
-      a1 -> b3;
-      b2 -> a3;
-      a3 -> a0;
-      a3 -> end;
-      b3 -> end;
-    }
-    `)
-
-    var render = new dagreD3.render();
-    var svg = d3.select("svg"), svgGroup = svg.append("g");
-    render(d3.select("svg g"), g);
-    var xCenterOffset = (svg.attr("width") - g.graph().width) / 2;
-    svgGroup.attr("transform", "translate(" + xCenterOffset + ", 20)");
-    svg.attr("height", g.graph().height + 40);
   },
   methods: {
     play: function (action) {
@@ -82,6 +78,7 @@ new Vue({
           this.aiScore = response.getNewstate().getAiscore()
           this.turnMessage = `Human played ${action}, AI played ${rpsToAction(response.getAirps())}`
           console.log(response.getStats().getPredictiontree())
+          showGraph(response.getStats().getPredictiontree())
         }
       })
     }
