@@ -1,3 +1,4 @@
+
 /**
  * @fileoverview gRPC-Web generated client stub for fr.yaro.rps
  * @enhanceable

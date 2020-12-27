@@ -30,20 +30,14 @@ lazy val root = project.in(file("."))
   .dependsOn(engine)
   .aggregate(engine)
 
-// Adds additional packages into Twirl
-//TwirlKeys.templateImports += "com.yaro.controllers._"
-
-// Adds additional packages into conf/routes
-// play.sbt.routes.RoutesKeys.routesImport += "com.yaro.binders._"
-
 javaOptions in Universal ++= Seq(
   "-Dpidfile.path=/dev/null"
 )
 
-//watchTriggers ++= Seq(
-//  baseDirectory.value.toGlob / "public" / **,
-//  baseDirectory.value.toGlob / ** / "*.scala"
-//)
+watchTriggers ++= Seq(
+  baseDirectory.value.toGlob / "public" / **,
+  baseDirectory.value.toGlob / ** / "*.scala"
+)
 //watchBeforeCommand := { () =>
 //  FileTreeView.default.list(baseDirectory.value.toGlob / "public" / **).foreach {
 //    case (p, _) => println(p)
