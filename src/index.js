@@ -81,7 +81,7 @@ new Vue({
           this.humanScore = response.getNewstate().getHumanscore()
           this.aiScore = response.getNewstate().getAiscore()
           this.turnMessage = `Human played ${action}, AI played ${rpsToAction(response.getAirps())}`
-          console.log(response.getNewstate().getPredictiontree())
+          console.log(response.getStats().getPredictiontree())
         }
       })
     }
