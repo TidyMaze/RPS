@@ -38,7 +38,7 @@
         <md-card-header>
             <div class="md-title">{{turnMessage}}</div>
         </md-card-header>
-        <div class="md-layout md-gutter">
+        <div class="md-layout md-gutter buttons-container">
             <div class="md-layout-item button-item">
                 <md-button class="md-raised md-primary" v-on:click="play('rock')">
                     <img src="/assets/images/rock.svg" class="button-img"/>
@@ -56,9 +56,8 @@
             </div>
         </div>
     </md-card>
-    <div>Game id: {{ gameId }}</div>
-
     <svg id="svg-canvas" width="100%"></svg>
+    <div>Game id: {{ gameId }}</div>
 </div>
 
 <a href="https://www.vecteezy.com/free-vector/rock-paper-scissors">Rock Paper Scissors Vectors by Vecteezy</a>
