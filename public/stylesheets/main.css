@@ -17,10 +17,6 @@ img.button-img {
     margin: 10px;
 }
 
-.scores-panel {
-    margin-bottom: 40px;
-}
-
 .score-counter {
     text-align: center;
 }
@@ -50,4 +46,8 @@ text {
 
 .buttons-container {
     padding-bottom: 10px;
+}
+
+.md-card {
+    margin-bottom: 20px;
 }
