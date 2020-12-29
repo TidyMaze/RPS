@@ -51,3 +51,7 @@ text {
 .md-card {
     margin-bottom: 20px;
 }
+
+#credits {
+    text-align: center;
+}
