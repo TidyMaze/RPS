@@ -40,13 +40,19 @@
         </md-card-header>
         <div class="md-layout md-gutter">
             <div class="md-layout-item button-item">
-                <md-button class="md-raised md-primary" v-on:click="play('rock')">Rock</md-button>
+                <md-button class="md-raised md-primary" v-on:click="play('rock')">
+                    <img src="/assets/images/rock.svg" class="button-img"/>
+                </md-button>
             </div>
             <div class="md-layout-item button-item">
-                <md-button class="md-raised md-primary" v-on:click="play('paper')">Paper</md-button>
+                <md-button class="md-raised md-primary" v-on:click="play('paper')">
+                    <img src="/assets/images/paper.svg" class="button-img"/>
+                </md-button>
             </div>
             <div class="md-layout-item button-item">
-                <md-button class="md-raised md-primary" v-on:click="play('scissors')">Scissors</md-button>
+                <md-button class="md-raised md-primary" v-on:click="play('scissors')">
+                    <img src="/assets/images/scissors.svg" class="button-img"/>
+                </md-button>
             </div>
         </div>
     </md-card>
@@ -55,6 +61,7 @@
     <svg id="svg-canvas" width="100%"></svg>
 </div>
 
+<a href="https://www.vecteezy.com/free-vector/rock-paper-scissors">Rock Paper Scissors Vectors by Vecteezy</a>
 <script src="assets/main.js"></script>
 
 </body>

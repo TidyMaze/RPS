@@ -6,6 +6,17 @@
     text-align: center;
 }
 
+.button-item button {
+    height: fit-content;
+    border-radius: 15px;
+}
+
+img.button-img {
+   height: 100px !important;
+    width: 100px;
+    margin: 10px;
+}
+
 .scores-panel {
     margin-bottom: 40px;
 }
