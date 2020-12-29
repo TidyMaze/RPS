@@ -50,7 +50,7 @@ class RPSServiceImpl extends RPSService {
     val pickedProto = toProto(picked)
     val response = PlayTurnResponse(in.gameId, Some(resStateProto), Some(predictionsStats), pickedProto)
 
-    games.put(gameId, state.copy(game = (state.game :+ humanRps).takeRight(15), updatedPlayerScore, updatedAiScore))
+    games.put(gameId, state.copy(game = (state.game :+ humanRps).takeRight(30), updatedPlayerScore, updatedAiScore))
 
     Future.successful(response)
   }

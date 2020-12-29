@@ -40,11 +40,9 @@ function showGraph(dot){
   render(d3.select("svg g"), g);
   var graphWidth = g.graph().width
   var graphHeight = g.graph().height
-  console.log(graphWidth)
+  console.log('size: ' + graphWidth + ', ' + graphHeight)
   if(graphWidth >= 0 && graphHeight >= 0) {
-    var xCenterOffset = (svg.attr("width") - graphWidth) / 2;
-    svgGroup.attr("transform", "translate(" + xCenterOffset + ", 20)");
-    svg.attr("height", g.graph().height + 40);
+    svg.attr("viewBox", `0 0 ${graphWidth} ${graphHeight}`);
   }
 }
 
