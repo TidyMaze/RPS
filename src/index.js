@@ -76,7 +76,7 @@ new Vue({
           this.aiScore = response.getNewstate().getAiscore()
           this.turnMessage = `Human played ${action}, AI played ${rpsToAction(response.getAirps())}`
           console.log(response.getStats().getPredictiontree())
-          showGraph(response.getStats().getPredictiontree())
+          setTimeout(() => showGraph(response.getStats().getPredictiontree()), 0)
         }
       })
     }
