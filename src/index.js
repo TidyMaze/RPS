@@ -53,7 +53,8 @@ new Vue({
     humanScore: 0,
     aiScore: 0,
     gameId: null,
-    turnMessage: 'What do you want to play?'
+    turnMessage: 'What do you want to play?',
+    callOngoing: false
   },
   mounted: function() {
     if (!this.gameId) {
@@ -70,12 +71,14 @@ new Vue({
       let request = new PlayTurnRequest()
       request.setGameid(this.gameId)
       request.setRps(actionToRPS(action))
+      this.callOngoing = true;
       client.playTurn(request, {}, (err, response) => {
         if (!err) {
           this.humanScore = response.getNewstate().getHumanscore()
           this.aiScore = response.getNewstate().getAiscore()
           this.turnMessage = `Human played ${action}, AI played ${rpsToAction(response.getAirps())}`
-          console.log(response.getStats().getPredictiontree())
+          // console.log(response.getStats().getPredictiontree())
+          this.callOngoing = false;
           setTimeout(() => showGraph(response.getStats().getPredictiontree()), 0)
         }
       })

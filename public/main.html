@@ -40,17 +40,17 @@
         </md-card-header>
         <div class="md-layout md-gutter buttons-container">
             <div class="md-layout-item button-item">
-                <md-button class="md-raised md-primary" v-on:click="play('rock')">
+                <md-button class="md-raised md-primary" v-on:click="play('rock')" :disabled="callOngoing" >
                     <img src="/assets/images/rock.svg" class="button-img"/>
                 </md-button>
             </div>
             <div class="md-layout-item button-item">
-                <md-button class="md-raised md-primary" v-on:click="play('paper')">
+                <md-button class="md-raised md-primary" v-on:click="play('paper')" :disabled="callOngoing">
                     <img src="/assets/images/paper.svg" class="button-img"/>
                 </md-button>
             </div>
             <div class="md-layout-item button-item">
-                <md-button class="md-raised md-primary" v-on:click="play('scissors')">
+                <md-button class="md-raised md-primary" v-on:click="play('scissors')" :disabled="callOngoing">
                     <img src="/assets/images/scissors.svg" class="button-img"/>
                 </md-button>
             </div>
