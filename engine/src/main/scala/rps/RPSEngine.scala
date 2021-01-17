@@ -21,7 +21,14 @@ object RPSEngine {
     dot
   }
 
-  def simplify(g: Graph[Node, WDiEdge]): Graph[Node, WDiEdge] = g
+  def simplify(g: Graph[Node, WDiEdge]): Graph[Node, WDiEdge] = {
+    val root = g.find(Nil)
+    root.foreach { r =>
+      val children = r.edges.map(_.to)
+      println("children: " + children)
+    }
+    g
+  }
 
   def buildAndPredict(state: GameState, windowSize: Int, minSample: Int, rps: RPS): IO[(RPS, Int, Int, String)] = {
     val g= buildGraphFromHistory(state, windowSize)
