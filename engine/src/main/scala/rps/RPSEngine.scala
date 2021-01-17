@@ -2,23 +2,10 @@ package rps
 
 import cats.effect.IO
 import rps.App.{Node, beating, predictNext, random, randomRPS, showNode}
-import scalax.collection.Graph
+import scalax.collection.mutable.Graph
 import scalax.collection.edge.WDiEdge
-import scalax.collection.io.dot.{DotAttr, DotEdgeStmt, DotRootGraph}
-import cats.effect.{ExitCode, IO, IOApp}
-import scalax.collection.Graph
-import scalax.collection.GraphPredef._
-import scalax.collection.GraphEdge._
-import scalax.collection.edge.Implicits.{+, _}
-import scalax.collection.edge.WDiEdge
-import scalax.collection.io.dot._
-import implicits._
-import rps.App.{Node, beating, predictNext, random, randomRPS, showNode}
-import cats.implicits._
-import rps.RPSEngine.buildAndPredict
-
-import scala.io.StdIn
-import scala.util.Random
+import scalax.collection.io.dot.implicits._
+import scalax.collection.io.dot.{DotAttr, DotEdgeStmt, DotRootGraph, _}
 
 object RPSEngine {
 

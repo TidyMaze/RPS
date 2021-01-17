@@ -1,7 +1,7 @@
 package rps
 
 import cats.effect.{ExitCode, IO, IOApp}
-import scalax.collection.Graph
+import scalax.collection.mutable.Graph
 import scalax.collection.edge.WDiEdge
 import cats.implicits._
 import rps.RPSEngine.buildAndPredict
