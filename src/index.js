@@ -79,7 +79,7 @@ new Vue({
           this.turnMessage = `Human played ${action}, AI played ${rpsToAction(response.getAirps())}`
           // console.log(response.getStats().getPredictiontree())
           this.callOngoing = false;
-          setTimeout(() => showGraph(response.getStats().getPredictiontree()), 0)
+          // setTimeout(() => showGraph(response.getStats().getPredictiontree()), 0)
         }
       })
     }
