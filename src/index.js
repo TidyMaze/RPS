@@ -36,7 +36,7 @@ function showGraph(dot){
   // Create the input graph
   var g = graphlibDot.read(dot)
   var render = new dagreD3.render();
-  var svg = d3.select("svg"), svgGroup = svg.append("g");
+  var svg = d3.select("svg")
   render(d3.select("svg g"), g);
   var graphWidth = g.graph().width
   var graphHeight = g.graph().height
