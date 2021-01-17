@@ -37,15 +37,7 @@ object RPSEngine {
   def simplify(g: Graph[Node, WDiEdge]): Graph[Node, WDiEdge] = g
 
   def buildAndPredict(state: GameState, windowSize: Int, minSample: Int, rps: RPS): IO[(RPS, Int, Int, String)] = {
-    val edges =
-      (1 to windowSize)
-        .view
-        .flatMap(state.game.sliding)
-        .groupMapReduce(identity)(_ => 1)(_ + _)
-        .map { case (s, size) => WDiEdge(s.init, s)(size) }
-        .toList
-
-    val g = Graph[Node, WDiEdge](edges: _*)
+    val g= buildGraphFromHistory(state, windowSize)
 
     val simplifiedGraph = simplify(g)
 
@@ -63,6 +55,17 @@ object RPSEngine {
     } yield (picked, updatedPlayerScore, updatedAiScore, dot)
   }
 
+  private def buildGraphFromHistory(state: GameState, windowSize: Int): Graph[Node, WDiEdge] = {
+    val edges =
+      (1 to windowSize)
+        .view
+        .flatMap(state.game.sliding)
+        .groupMapReduce(identity)(_ => 1)(_ + _)
+        .map { case (s, size) => WDiEdge(s.init, s)(size) }
+        .toList
+
+    Graph[Node, WDiEdge](edges: _*)
+  }
 }
 
 sealed trait RPS extends Product with Serializable
