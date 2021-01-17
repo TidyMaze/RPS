@@ -21,17 +21,8 @@ import scala.io.StdIn
 import scala.util.Random
 
 object RPSEngine {
-  def buildGraph(game: Seq[RPS], windowSize: Int): (Graph[Node, WDiEdge], String) = {
-    val edges =
-      (1 to windowSize)
-        .view
-        .flatMap(game.sliding)
-        .groupMapReduce(identity)(_ => 1)(_ + _)
-        .map { case (s, size) => WDiEdge(s.init, s)(size) }
-        .toList
 
-    val g = Graph[Node, WDiEdge](edges: _*)
-
+  private def exportDot(g: Graph[Node, WDiEdge]): String = {
     val root = DotRootGraph(directed = true, Some("RPS"))
 
     val dot = g.toDot(
@@ -40,12 +31,25 @@ object RPSEngine {
         case WDiEdge(source, target, weight) =>
           Some((root, DotEdgeStmt(showNode(source.toOuter), showNode(target.toOuter), Seq(DotAttr("penwidth", weight), DotAttr("label", weight)))))
       })
-
-    (g, dot)
+    dot
   }
 
+  def simplify(g: Graph[Node, WDiEdge]): Graph[Node, WDiEdge] = g
+
   def buildAndPredict(state: GameState, windowSize: Int, minSample: Int, rps: RPS): IO[(RPS, Int, Int, String)] = {
-    val (g, dot) = buildGraph(state.game, windowSize)
+    val edges =
+      (1 to windowSize)
+        .view
+        .flatMap(state.game.sliding)
+        .groupMapReduce(identity)(_ => 1)(_ + _)
+        .map { case (s, size) => WDiEdge(s.init, s)(size) }
+        .toList
+
+    val g = Graph[Node, WDiEdge](edges: _*)
+
+    val simplifiedGraph = simplify(g)
+
+    val dot: String = exportDot(simplifiedGraph)
 
     for {
       picked <- predictNext(g, windowSize, minSample, state.game).map {
