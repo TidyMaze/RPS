@@ -35,14 +35,14 @@ function rpsToAction(rps) {
 function showGraph(dot){
   // Create the input graph
   var g = graphlibDot.read(dot)
-  var render = new dagreD3.render();
+  var render = new dagreD3.render()
   var svg = d3.select("svg")
-  render(d3.select("svg g"), g);
+  render(d3.select("svg g"), g)
   var graphWidth = g.graph().width
   var graphHeight = g.graph().height
   console.log('size: ' + graphWidth + ', ' + graphHeight)
   if(graphWidth >= 0 && graphHeight >= 0) {
-    svg.attr("viewBox", `0 0 ${graphWidth} ${graphHeight}`);
+    svg.attr("viewBox", `0 0 ${graphWidth} ${graphHeight}`)
   }
 }
 
@@ -79,7 +79,7 @@ new Vue({
           this.turnMessage = `Human played ${action}, AI played ${rpsToAction(response.getAirps())}`
           // console.log(response.getStats().getPredictiontree())
           this.callOngoing = false;
-          // setTimeout(() => showGraph(response.getStats().getPredictiontree()), 0)
+          setTimeout(() => showGraph(response.getStats().getPredictiontree()), 0)
         }
       })
     }
