@@ -25,11 +25,21 @@ object RPSEngine {
   }
 
   def simplify(g: Graph[Node, WDiEdge]): Graph[Node, WDiEdge] = {
-    val edgesThatLeadToLeaf = g.edges.filter(e => e.edge match {
-      case from :~> to % 1.0 => from.toOuter != Nil && from.outDegree == 1 && to.outDegree == 0
-      case _ => false
-    })
-    println("edgesThatLeadToLeaf: " + edgesThatLeadToLeaf)
+    var found = true
+    while(found){
+      found = false
+
+      val edgesThatLeadToLeaf = g.edges.filter(e => e.edge match {
+        case from :~> to % 1.0 => from.toOuter != Nil && from.outDegree == 1 && to.outDegree == 0
+        case _ => false
+      })
+//      println("edgesThatLeadToLeaf: " + edgesThatLeadToLeaf)
+      if(edgesThatLeadToLeaf.nonEmpty){found = true}
+      edgesThatLeadToLeaf.foreach { e =>
+        g.remove(e.toOuter.to)
+      }
+    }
+
     g
   }
 
