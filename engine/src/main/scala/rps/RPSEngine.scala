@@ -6,6 +6,9 @@ import scalax.collection.mutable.Graph
 import scalax.collection.edge.WDiEdge
 import scalax.collection.io.dot.implicits._
 import scalax.collection.io.dot.{DotAttr, DotEdgeStmt, DotRootGraph, _}
+import scalax.collection.GraphPredef._, scalax.collection.GraphEdge._
+import scalax.collection.edge.Implicits._
+import scalax.collection.edge.LBase._
 
 object RPSEngine {
 
@@ -22,11 +25,11 @@ object RPSEngine {
   }
 
   def simplify(g: Graph[Node, WDiEdge]): Graph[Node, WDiEdge] = {
-    val root = g.find(Nil)
-    root.foreach { r =>
-      val children = r.edges.map(_.to)
-      println("children: " + children)
-    }
+    val edgesThatLeadToLeaf = g.edges.filter(e => e.edge match {
+      case from :~> to % 1.0 => from.toOuter != Nil && from.outDegree == 1 && to.outDegree == 0
+      case _ => false
+    })
+    println("edgesThatLeadToLeaf: " + edgesThatLeadToLeaf)
     g
   }
 
