@@ -18,3 +18,5 @@ This project uses many things:
 - grpc-web as the exchange protocol between front and back (both generated [from protobuf](public/proto/rps-service.proto))
 - Scala with play (but actually using Akka HTTP for grpc-web ...) *// TODO: remove play*
 - docker to wrap it up
+
+
