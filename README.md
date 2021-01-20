@@ -3,6 +3,8 @@
 
 You can find the link here: [https://tinyurl.com/try-rps](https://tinyurl.com/try-rps)
 
+![capture](rps-capture.png)
+
 ## Run it by yourself 
 
 To build, publish docker images and run it locally:
